@@ -26,11 +26,20 @@ async function run() {
   try {
     client.connect();
     const brandCollection = client.db("babyToyStoreDB").collection("brandDB");
+    const productCollection = client.db("babyToyStoreDB").collection("products");
 
 app.get("/allBrands",async (req, res) => {
     const result = await brandCollection.find().toArray();
    res.send(result)
 })
+app.get("/allBrands/:brandName", async (req, res) => {
+    const brand = req.params.brandName;
+    const query = { brand: brand };
+    const cursor = productCollection.find(query);
+    const result = await cursor.toArray();
+    console.log(result);
+    res.send(result);
+  });
 
     // Send a ping to confirm a successful connection
     client.db("admin").command({ ping: 1 });
