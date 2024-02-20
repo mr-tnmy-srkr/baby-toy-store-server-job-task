@@ -32,6 +32,13 @@ app.get("/allBrands",async (req, res) => {
     const result = await brandCollection.find().toArray();
    res.send(result)
 })
+app.post("/addProducts", async (req, res) => {
+    const newProduct = req.body;
+    // console.log(newProduct);
+    const result = await productCollection.insertOne(newProduct);
+    // console.log(result);
+    res.send(result);
+  });
 app.get("/allBrands/:brandName", async (req, res) => {
     const brand = req.params.brandName;
     const query = { brand: brand };
