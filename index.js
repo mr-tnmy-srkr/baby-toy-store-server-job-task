@@ -27,9 +27,11 @@ async function run() {
     client.connect();
     const brandCollection = client.db("babyToyStoreDB").collection("brandDB");
     const productCollection = client
-    .db("babyToyStoreDB")
-    .collection("products");
-    const cartProductCollection = client.db("babyToyStoreDB").collection("cartItems");
+      .db("babyToyStoreDB")
+      .collection("products");
+    const cartProductCollection = client
+      .db("babyToyStoreDB")
+      .collection("cartItems");
 
     app.get("/allBrands", async (req, res) => {
       const result = await brandCollection.find().toArray();
@@ -53,10 +55,9 @@ async function run() {
     app.get("/allBrands/:brandName/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result =await productCollection.findOne(query);
+      const result = await productCollection.findOne(query);
       res.send(result);
     });
-
 
     app.post("/addToCart", async (req, res) => {
       const product = req.body;
@@ -64,6 +65,11 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/myCart", async (req, res) => {
+      const cursor = cartProductCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     client.db("admin").command({ ping: 1 });
     console.log(
