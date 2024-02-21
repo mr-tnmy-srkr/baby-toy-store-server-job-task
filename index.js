@@ -26,27 +26,35 @@ async function run() {
   try {
     client.connect();
     const brandCollection = client.db("babyToyStoreDB").collection("brandDB");
-    const productCollection = client.db("babyToyStoreDB").collection("products");
+    const productCollection = client
+      .db("babyToyStoreDB")
+      .collection("products");
 
-app.get("/allBrands",async (req, res) => {
-    const result = await brandCollection.find().toArray();
-   res.send(result)
-})
-app.post("/addProducts", async (req, res) => {
-    const newProduct = req.body;
-    // console.log(newProduct);
-    const result = await productCollection.insertOne(newProduct);
-    // console.log(result);
-    res.send(result);
-  });
-app.get("/allBrands/:brandName", async (req, res) => {
-    const brand = req.params.brandName;
-    const query = { brand: brand };
-    const cursor = productCollection.find(query);
-    const result = await cursor.toArray();
-    console.log(result);
-    res.send(result);
-  });
+    app.get("/allBrands", async (req, res) => {
+      const result = await brandCollection.find().toArray();
+      res.send(result);
+    });
+    app.post("/addProducts", async (req, res) => {
+      const newProduct = req.body;
+      // console.log(newProduct);
+      const result = await productCollection.insertOne(newProduct);
+      // console.log(result);
+      res.send(result);
+    });
+    app.get("/allBrands/:brandName", async (req, res) => {
+      const brand = req.params.brandName;
+      const query = { brand: brand };
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      console.log(result);
+      res.send(result);
+    });
+    app.get("/allBrands/:brandName/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result =await productCollection.findOne(query);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     client.db("admin").command({ ping: 1 });
