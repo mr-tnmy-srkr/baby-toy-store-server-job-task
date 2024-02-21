@@ -27,8 +27,9 @@ async function run() {
     client.connect();
     const brandCollection = client.db("babyToyStoreDB").collection("brandDB");
     const productCollection = client
-      .db("babyToyStoreDB")
-      .collection("products");
+    .db("babyToyStoreDB")
+    .collection("products");
+    const cartProductCollection = client.db("babyToyStoreDB").collection("cartItems");
 
     app.get("/allBrands", async (req, res) => {
       const result = await brandCollection.find().toArray();
@@ -53,6 +54,13 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result =await productCollection.findOne(query);
+      res.send(result);
+    });
+
+
+    app.post("/addToCart", async (req, res) => {
+      const product = req.body;
+      const result = await cartProductCollection.insertOne(product);
       res.send(result);
     });
 
