@@ -10,6 +10,13 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 // middleware
 app.use(cors());
 app.use(express.json());
+app.use(
+  cors({
+    // origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["https://baby-toy-store-job-task.surge.sh/"],
+    credentials: true,
+  })
+);
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@myprojectscluster.drcktji.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -68,6 +75,28 @@ async function run() {
     app.get("/myCart", async (req, res) => {
       const cursor = cartProductCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.put("/product/updateProduct/:brandName/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateProduct = {
+        $set: {
+          brand: data.brand,
+          image: data.image,
+          name: data.name,
+          price: data.price,
+          rating: data.rating,
+          description: data.description,
+        },
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updateProduct,
+        options
+      );
       res.send(result);
     });
     // Send a ping to confirm a successful connection
