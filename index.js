@@ -44,6 +44,7 @@ async function run() {
       const result = await brandCollection.find().toArray();
       res.send(result);
     });
+
     app.post("/addProducts", async (req, res) => {
       const newProduct = req.body;
       // console.log(newProduct);
@@ -51,6 +52,7 @@ async function run() {
       // console.log(result);
       res.send(result);
     });
+
     app.get("/allBrands/:brandName", async (req, res) => {
       const brand = req.params.brandName;
       const query = { brand: brand };
@@ -59,6 +61,7 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
     app.get("/allBrands/:brandName/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -105,6 +108,7 @@ async function run() {
       const result = await cartProductCollection.deleteOne(query);
       res.send(result);
     });
+    
     // Send a ping to confirm a successful connection
     client.db("admin").command({ ping: 1 });
     console.log(
